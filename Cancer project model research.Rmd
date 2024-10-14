@@ -1,0 +1,87 @@
+---
+title: "Investigating what type of statistical model is suitable for our data"
+author: "Ethan Sumpter"
+output: html_document
+date: "2024-10-10"
+---
+
+```{r setup, include=FALSE}
+#Load libraries and import data
+knitr::opts_chunk$set(echo = TRUE)
+#Change the cancer_data.csv bit to whatever your file is called.
+cancer_data <- read.csv("Cancer_data.csv", header = TRUE)
+library(survival)
+library(ranger)
+library(ggplot2)
+library(dplyr)
+library(ggfortify)
+library(GGally)
+library(survminer)
+#Treat factors as factors
+cancer_data$Type <- as.factor(cancer_data$Type)
+cancer_data$Sex <- as.factor(cancer_data$Sex)
+```
+
+## Summary of the data
+```{r echo=FALSE}
+summary(cancer_data)
+```
+
+## Testing different models:
+
+Always start simple with a linear regression model.
+
+### Linear Model
+```{r echo=FALSE}
+linear_model <- lm(Survival ~ Age + Sex + Type, data = cancer_data)
+summary(linear_model)
+```
+
+### General linear Model
+```{r echo=FALSE}
+glm_model <- glm(Survival ~ Age + Sex + Type, family = Gamma(link = "log"), data = cancer_data)
+summary(glm_model)
+```
+
+#### Comparison of the linear and general linear models using AIC and BIC
+``` {r echo=FALSE}
+AIC(linear_model, glm_model)
+BIC(linear_model, glm_model)
+```
+
+Given the linear and general linear models, the general linear model with a 'log' link, is slightly better fitting however I think we can do better. I do not think we have enough data to use these types of models (small sample sizes).
+
+Due to the nature of our data I think survival analysis may be a good fit. We can link most of the other variables to the survival time which I think is the most important variable to be explored.
+
+### Try Survival Analysis model with cox model
+```{r echo=FALSE}
+cox_model <- coxph(Surv(Survival) ~ Type + Sex + Age, data = cancer_data)
+summary(cox_model)
+```
+
+If we look at the P-values for the cox model, the global p-value is > 0.05. Most variables are not considered statistically significant via the p-value approach under this model. I do not like this model.
+
+### Try Surivival Analysis model but with parametric approach (exponential distribution)
+```{r echo=FALSE}
+parametric_model2 <- survreg(Surv(Survival) ~ Type + Sex + Age, data = cancer_data, dist = "exponential")
+summary(parametric_model2)
+AIC(parametric_model2)
+```
+
+After testing a few different types of parametric survival analysis models, I fell upon the model above. It follows an exponential underlying distribution. It has a low global p-value (0.0052) and also has the lowest AIC value at 1273.861, when compared to the other parametric models. For context, I will show the other models below which are less suitable (just for reference).
+
+### Try Surivival Analysis model but with parametric approach (weibull distribution)
+```{r echo=FALSE}
+parametric_model1 <- survreg(Surv(Survival) ~ Type + Sex + Age, data = cancer_data, dist = "weibull")
+summary(parametric_model1)
+AIC(parametric_model1)
+```
+
+### Try Surivival Analysis model but with parametric approach (lognormal distribution)
+```{r echo=FALSE}
+parametric_model3 <- survreg(Surv(Survival) ~ Type + Sex + Age, data = cancer_data, dist = "lognormal")
+summary(parametric_model3)
+AIC(parametric_model3)
+```
+
+#### In conclusion I would recommend using the parametric model approach, under survival fit analysis with an exponential underlying distribution.
