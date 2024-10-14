@@ -1,0 +1,50 @@
+
+---
+title: "Investigation into the relationship between cancer type and sex"
+author: "James Leno"
+date: "20/10/24"
+output:
+  html_document: default
+---
+
+```{r steup, include = FALSE}
+#Read data and change both type and sex into factors
+library(readxl)
+#install.packages("ggplot2")
+library(ggplot2)
+data <- read_excel("C:\\Users\\pmyjl20\\Downloads\\data.xlsx")
+data$Type <- as.factor(data$Type)
+data$Sex <- as.factor(data$Sex)
+```
+
+```{r setup, include = FALSE}
+#Create contingency table
+table <- table(data$Type, data$Sex)
+print(table)
+
+#Chi-squared test
+cst1 <- chisq.test(table)
+print(cst1)
+
+#ggplot(data, aes(x = Type, fill = Sex)) + geom_bar(position = "dodge") + labs(title = "Cancer type by sex", x = "Type of Cancer", y = "Count")
+```
+
+p-value = 0.01317, hence this suggests that the type of cancer and gender are associated. However, of course this is going to be the case as the data set includes prostate, testicle, uterus, ovary and breast cancer. All widely known to effect only one gender (1% of all breast cancer patients are men)
+
+```{r setup, include = FALSE}
+#Chi-squared test - without prostate, testicle, uterus, ovary and breast cancer
+filtered_data_one <- subset(data, !(Type %in% c('Prostrate', 'Testicle', 'Uterus', 'Ovary', 'Breast')))
+table_one <- table(filtered_data_one$Type, filtered_data_one$Sex)
+print(table_one)
+cst2 <- chisq.test(table_one)
+print(cst2)
+```
+
+p-value = 0.6071, this is significantly larger than the previous data set. This shows that there is no significant association between cancer type and gender.
+
+```{r setup, include = FALSE}
+#Logistic regression analysis
+filtered_data_one$Sex <- ifelse(filtered_data_one$Sex == 'Male', 1, 0)
+log_model <- glm(Sex ~ Type, data = filtered_data_one, family = binomial)
+summary(log_model)
+```
