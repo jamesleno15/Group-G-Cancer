@@ -1,0 +1,95 @@
+---
+title: "cancer_Q2"
+author: "Yunya He"
+date: "2024-10-08"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, results='asis')  
+
+options(repos = c(CRAN = "https://mirrors.tuna.tsinghua.edu.cn/CRAN/"))
+
+# Install any necessary package if not already installed
+install.packages("readxl")  
+install.packages("ggpubr")
+
+# Load necessary libraries
+library(ggplot2)  # Data visualization
+library(dplyr)    # Data manipulation
+library(car)      # Statistical tests
+library(ggpubr)   # Enhance graphics
+library(ggfortify)
+library(readxl)
+```
+
+# Read the Excel file
+# Modify according to actual file path
+```{r}
+data <- read_excel("Cancer.xlsx") 
+```
+
+```{r}
+# Check the structure of the data
+str(data)
+```
+
+### 1. ANOVA model
+# First, we constructed an ANOVA model to test whether there are significant differences in the mean ages of patients across different cancer types. 
+
+```{r}
+anova_model <- aov(Age ~ Type, data = data)
+anova_summary <- summary(anova_model)
+anova_summary
+```
+
+In this result, Df represents degrees of freedom, Sum Sq is the sum of squares, Mean Sq is the mean square, the F value is 1.499, and the p-value is 0.103. Since the p-value is greater than 0.05, we cannot reject the null hypothesis, indicating that there is no significant difference in the mean ages among different cancer types.
+
+### 2. Normality test
+Next, we conducted a normality test to verify whether the residuals of the ANOVA model follow a normal distribution. 
+
+```{r}
+shapiro_test <- shapiro.test(residuals(anova_model))
+shapiro_test
+```
+
+The p-value of 0.0967 is greater than 0.05, indicating that we do not have enough evidence to reject the normality assumption for the residuals, suggesting they approximately follow a normal distribution.
+
+### 3. Homogeneity of variance test
+We also performed a homogeneity of variance test using Levene's test to confirm whether the variances across different cancer types are equal. 
+Ensure Type is treated as a factor
+
+```{r}
+data$Type <- as.factor(data$Type)
+levene_test <- leveneTest(Age ~ Type, data = data)
+levene_test
+```
+
+The p-value of 0.7844 is greater than 0.05, indicating that we do not have enough evidence to reject the homogeneity of variance assumption, suggesting that the variances are relatively equal across groups.
+
+### 4.Visualize age distribution - Boxplot
+Create a horizontal boxplot
+```{r}
+ggplot(data, aes(x = reorder(Type, Age, FUN = median), y = Age)) +
+  geom_boxplot(fill = "skyblue", outlier.color = "red") +
+  coord_flip() +  # Flip coordinates for horizontal display
+  labs(title = "Age Distribution by Cancer Type",
+       x = "Cancer Type",
+       y = "Age") +
+  theme_minimal() +  # Use a minimal theme for better aesthetics
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))  # Adjust x-axis text for better readability
+```
+  
+Create a dot plot
+
+```{r}
+ggplot(data, aes(x = reorder(Type, Age, FUN = median), y = Age)) +
+  geom_dotplot(binaxis = 'y', stackdir = 'center', fill = "blue", dotsize = 0.5) +
+  coord_flip() +  # Flip coordinates for horizontal display
+  labs(title = "Individual Age Data by Cancer Type",
+       x = "Cancer Type",
+       y = "Age") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
