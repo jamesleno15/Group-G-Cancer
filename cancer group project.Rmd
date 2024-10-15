@@ -1,0 +1,188 @@
+---
+title: "Cancer group project"
+author: "James West"
+date: '`r Sys.Date()`'
+output: html_document
+---
+
+### Introduction
+This statistical report is regarding $100$ terminally ill cancer patients and there survival time. The report will be analysing the correlation between the age at which the patient was terminally diagnosed with cancer and the survival time in days. We will be investigating associations between the age of the patient, the sex of the patient, the type of cancer the patient had all against the survival time of the patient.
+
+### Exploratory Analysis: Investiagating the age of getting diagnosed with terminal cancer and its comparison against the survival time of the patient
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(readxl)
+library(knitr)
+Cancer <- read_excel("Cancer.xlsx")
+Cancer$Sex <- factor(Cancer$Sex, labels=c("F","M"))
+Cancer$Age <- as.numeric(Cancer$Age)
+Cancer$Survival <- as.numeric(Cancer$Survival)
+factor(Cancer$Type, levels = c("Stomach","Bronchus","Esophagus","Colon","Rectum","Ovary","Breast","Bladder","Gallbladder","Kidney","Lymphoma","Prostrate","Uterus","Chondrosarcoma","Brain","Pancreas","Fibrosarcoma","Testicle","Psudomyxoma","Carcinoid","Leiomyosarcoma","Leukemia"), ordered = TRUE)
+```
+
+```{r NAME, echo=FALSE, fig.align='center', include = TRUE}
+library(ggplot2)
+plot(Cancer$Age, Cancer$Survival, xlab = "The age of getting Cancer (years)", ylab = "The survival time (days)", main = "The age of getting cancer versus the survival time")
+mod <- lm(Survival ~ Age, data = Cancer)
+abline(mod, col = "blue")
+```
+
+```{r echo = FALSE, results = 'hide'}
+cor.test(Cancer$Age, Cancer$Survival)
+```
+
+When using all the data given in the excel spreadsheet the scatter plot shows no correlation between the number of days surviving and the age of getting diagnosed with terminal cancer. This is because all the points on the scatter graph are random which do not follow any form of pattern resulting in a flat gradient for the best line of fit. This is further backed up when using the Pearson's product moment correlation (PMMC), with a coefficent $-0.07738$ (5dp). 
+
+Since the PMMC is so close to 0 it proves that there is no correlation between the two variables, thus the data set does not follow any trend. The survival time will be less effected by the age of the patient, this is due to all the patients being terminally ill, thus the cancer cannot be cured or controlled with any treatment and will unfortunately lead to a premature death, but will be more effected by where the cancer is located.
+
+### The effect of gender on the survival time
+
+When breaking down the 100 patient dataset, just $16$ patients are under the age of 50 years old and the largest amount of patients being between 60 and 69 years old having $29$ patients. There are $27$ between 50 and 59 years old and $26$ between 70 and 79 years old. This analysis indicates that the likelihood of a terminal cancer diagnosis increases with age, as a significant proportion of patients are over the age of 60 in the given dataset.
+
+```{r, echo = FALSE, results = 'hide'}
+male <- subset(Cancer, Sex == "M")
+male.mean <- mean(male$Survival)
+male <- subset(Cancer, Sex == "M")
+male.median <- median(male$Survival)
+print(male.mean)
+print(male.median)
+female <- subset(Cancer, Sex == "F")
+female.mean <- mean(female$Survival)
+female <- subset(Cancer, Sex == "F")
+female.median <- median(female$Survival)
+print(female.mean)
+print(female.median)
+```
+
+```{r, echo = FALSE, fig.align = "center", results = 'hide'}
+boxplot(Survival ~ Sex, data = Cancer, xlab = "Sex", ylab = "Survival time (days)", main = "Boxplot of Survival times against gender")
+```
+
+The boxplots show that both the mean survival time after getting diagnosed with cancer is low in males and females regardless of age, which is expected due to the 100 patients all being terminally ill. The males mean survival time is $217.1923$ and the womens is $203.25$. Although the male mean survival time is longer, they have more outliers in their dataset, with more surviving for a longer duration then the interquartile range of the box plot coinciding to increasing the mean survival time, reducing the accuracy of the mean survival time.
+
+This is further backed up by the males median survival time being $82$ days and the womens being $130$ days. This could be to do with how dangerous the gender specific cancer types are, suchas prostrate or testicular and breast cancer. The average survival time with breast cancer from the dataset is $348$ days, whilst with prostrate cancer $166$ days and testicular cancer is $15$. These observations however are not particularly accurate due to only having one data point for both prostrate and testicle cancer.
+
+### Modelling
+
+We will model the dataset given and filter the data in order to find the relationship between the variables; the age the patient was diagnsoed with a type of terminal cancer against there survival time. We will model this through comparing different types of cancer that have a large dataset, thus we will be modelling: The relationship between the age of getting diagnosed with Stomach cancer, Bronchus cancer, Colon cancer, Breast cancer and Kidney cancer all against the patients survival time(top 5 largest datasets to increase the accuracy of the models).      
+
+
+```{r, include=FALSE}
+
+Cancer <- read_excel("Cancer.xlsx")
+Cancer$Sex <- factor(Cancer$Sex, labels=c("F","M"))
+Cancer$Age <- as.numeric(Cancer$Age)
+Cancer$Survival <- as.numeric(Cancer$Survival)
+factor(Cancer$Type, levels = c("Stomach","Bronchus","Esophagus","Colon","Rectum","Ovary","Breast","Bladder","Gallbladder","Kidney","Lymphoma","Prostrate","Uterus","Chondrosarcoma","Brain","Pancreas","Fibrosarcoma","Testicle","Psudomyxoma","Carcinoid","Leiomyosarcoma","Leukemia"), ordered = TRUE)
+str(Cancer)
+```
+
+```{r,echo=FALSE, fig.align='center', include=TRUE}
+library(ggplot2)
+
+Cancer_Stomach <- subset(Cancer, Type=="Stomach")
+mod1 <- lm(Survival ~ Age, data = Cancer_Stomach)
+plot(Cancer_Stomach$Age,Cancer_Stomach$Survival, xlab = "Age of getting diagnosed with terminal Stomach cancer", ylab = "Survival time", main = "The survival time against the age of getting terminal Stomach cancer")
+abline(mod1, col = "red")
+```
+
+```{r echo = FALSE, results = 'hide'}
+cor.test(Cancer_Stomach$Age, Cancer_Stomach$Survival)
+```
+
+The scatter plot implies there is a weak negative correlation between the age of being diagnosed with terminal stomach cancer and survival time. The best-fit line has a mild negative slope, and the PMMC is $−0.25129$ (5dp). This suggests that older patients diagnosed with terminal stomach cancer tend to have shorter survival times, though the correlation is not particularly strong.
+
+When comparing this result against the overall cancer dataset, there is a stronger correlation between stomach cancer then the general data set. This implies that age has a more noticeable impact on survival outcomes for patients with terminal stomach cancer, then with other types of cancer. This implies that older individuals diagnosed with terminal stomach cancer are more likely to experience faster disease progression and reduced survival time compared to patients with other types of terminal cancer at the same age.
+
+```{r, echo = FALSE, fig.align = "center", results = 'hide'}
+Cancer_Stomach <- subset(Cancer, Type=="Stomach")
+boxplot(Survival ~ Sex, data = Cancer_Stomach, xlab = "Sex of patient with stomach cancer", ylab = "Survival time (days)", main = "Boxplot of Survival times against sex of the patient with Stomach cancer")
+```
+
+The boxplot shows that there are no outliers in the dataset for patients with stomach cancer. This implies the scatter plot is an accurate representation of the correlation between the two variables, and the above assumptions will hold.
+
+```{r,echo=FALSE, fig.align='center', include=TRUE}
+library(ggplot2)
+
+Cancer_Bronchus <- subset(Cancer, Type=="Bronchus")
+mod2 <- lm(Survival ~ Age, data = Cancer_Bronchus)
+plot(Cancer_Bronchus$Age,Cancer_Bronchus$Survival, xlab = "Age of getting diagnosed with terminal Bronchus cancer", ylab = "Survival time", main = "The survival time against the age of getting terminal Bronchus cancer")
+abline(mod2, col = "blue")
+```
+
+```{r echo = FALSE, results = 'hide'}
+cor.test(Cancer_Bronchus$Age, Cancer_Bronchus$Survival)
+```
+
+The scatter plot shows no correlation between age of getting diagnosed with terminal bronchus cancer and the survival time with a flat gradient for the best line of fit, aswell as having a PMMC $-0.07510$ (5dp). This PMMC is inline with the PMMC of the original model of just the age of getting diagnosed with terminal cancer and the survival time. 
+
+This could be due to bronchus cancer not having much data of patients between 40 and 65 years old causing a reduction in accuracy in the data. That being said, the graph shows no correlation, therefore the age of being diagnosed with terminal bronchus cancer does not have much or any effect on survival time. This could be due to the lungs being compromised leading to a quick death shown as all patients, excusing 2 outliers, passing away within $200$ days of the diagnoses.
+
+```{r,echo=FALSE, fig.align='center', include=TRUE}
+library(ggplot2)
+
+Cancer_Colon <- subset(Cancer, Type=="Colon")
+mod3 <- lm(Survival ~ Age, data = Cancer_Colon)
+plot(Cancer_Colon$Age,Cancer_Colon$Survival, xlab = "Age of getting diagnosed with terminal Colon cancer", ylab = "Survival time", main = "The survival time against the age of getting terminal Colon cancer")
+abline(mod3, col = "red")
+```
+
+```{r echo = FALSE, results = 'hide'}
+cor.test(Cancer_Colon$Age, Cancer_Colon$Survival)
+```
+
+The scatter plot which is comparing the age of getting diagnosed with terminal Colon cancer against the survival time. The plot once again shows no correlation between the two variables as shown with a shallow gradient for the best line of fit, which is further backed up with a PMMC $-0.12173$ (5dp). This suggests that older patients diagnosed with terminal colon cancer tend to have shorter survival times, though the correlation is so weak that this analysis is much less predictable.
+
+When comparing this data to the overall cancer dataset, where the PMMC is $-0.07338$ (5dp), it is clear that the relationship between age of being diagnosed with terminal colon cancer and survival time has a similar relationship then the general diagnoses of terminal cancer. This implies that the age has a similar impact on survival outcomes for patients with terminal colon cancer, then with other types of cancer.
+
+```{r,echo=FALSE, fig.align='center', include=TRUE}
+library(ggplot2)
+
+Cancer_Breast <- subset(Cancer, Type=="Breast")
+mod4 <- lm(Survival ~ Age, data = Cancer_Breast)
+plot(Cancer_Breast$Age,Cancer_Breast$Survival, xlab = "Age of getting diagnosed with terminal Breast cancer", ylab = "Survival time", main = "The survival time against the age of getting terminal Breast cancer")
+abline(mod4, col = "blue")
+```
+
+```{r echo = FALSE, results = 'hide'}
+cor.test(Cancer_Breast$Age, Cancer_Breast$Survival)
+```
+
+The scatter plot shows there is weak negative correlation between the age of getting diagnosed with terminal breast cancer and the survival time. Like stomach cancer, the line of best fit shows a steeper negative gradient then when compared with terminal cancer in general, implying that age has a more noticeable impact on survival outcomes for patients with terminal breast cancer, then with other types of cancer. This is further proven with a PMMC $-0.19200$, showing a stronger correlation when comparing with different types of cancer suchas Bronchus or Colon, aswell as the general terminal cancer dataset. This implies that older individuals diagnosed with terminal stomach cancer are more likely to experience faster disease progression and reduced survival time compared to patients with other types of terminal cancer at the same age.
+
+```{r,echo=FALSE, fig.align='center', include=TRUE}
+library(ggplot2)
+
+Cancer_Kidney <- subset(Cancer, Type=="Kidney")
+mod5 <- lm(Survival ~ Age, data = Cancer_Kidney)
+plot(Cancer_Kidney$Age,Cancer_Kidney$Survival, xlab = "Age of getting diagnosed with terminal Kidney cancer", ylab = "Survival time", main = "The survival time against the age of getting terminal Kidney cancer")
+abline(mod5, col = "red")
+```
+
+```{r echo = FALSE, results = 'hide'}
+cor.test(Cancer_Kidney$Age, Cancer_Kidney$Survival)
+```
+
+The relationship between the age of getting diagnosed with terminal Kidney cancer and survival time differs from all other types of cancer given in the spreadsheet. The graph shows positive correlation between the two variables, with a steeper best line of fit. Positive correlation indicates that as the age of the diagnoses for terminal kidney cancer increases survival time of the patient also increases. This again was further proven through its PMMC $0.42242$, showing the strongest correlation in the whole statistical report. This however could have been effected by the anomalous result of a 74 year old males surviving $1554$ days. The majority of the data shows survival time being $500$ days, regardless of age. Which again, without the anomalous result, would lead to a flat gradient for the best line of fit on the scatter plot and a much lower coefficient for the PMMC, hence a lower correlation between the two variables.
+
+```{r, echo = FALSE, fig.align = "center", results = 'hide'}
+Cancer_Kidney <- subset(Cancer, Type=="Kidney")
+boxplot(Survival ~ Sex, data = Cancer_Kidney, xlab = "Sex of patient with kidney cancer", ylab = "Survival time (days)", main = "Boxplot of Survival times against sex of the patient with Kidney cancer")
+```
+Although the 74 year old male survives for a significant longer duration then any other patients, it is not an outlier result. From further readings of reports, there should be a negative correlation between the two variables. The data shows positive correlation, and no outliers in the box plot, therefore I believe this out come could be due to having such a small pool of data reducing the accuarcy of the results.
+
+### Conclusion
+
+In conclusion, there is a weak correlation between the age of diagnosis and survival time in terminal cancer patients. However, the type of cancer will influence the relationship of the two variables, with Stomach and Breast cancers showing the strongest negative correlations as proven above. This suggests that older patients with these types of cancer tend to have shorter survival times after diagnosis then patients with cancer types like Bronchus cancer or Colon cancer.
+
+The study's small sample size of just $100$ patients limits the accuracy of the findings in this statistical report, as outliers or anamolous resutls can heavily skew the final correlation results. This was proven in the case of terminal kidney cancer, a single longer survival time of an older patient resulted in a less reliable PMMC, causing a relatively strong positive correlation between the variables. When the outliers, which are all above the interquartile range, are excluded, the correlation becomes stronger, highlighting a clearer link between age and survival time then shown in the first graph of "The age of getting cancer versus the survival time"
+
+Overall, the data suggests that as the age of diagnosis increases, survival time generally decreases. However, the type of cancer does play a critical role as not all cancers behave the same, and some may have a greater impact on survival than others.
+
+
+
+
+
+
+
