@@ -32,9 +32,9 @@ abline(mod, col = "blue")
 cor.test(Cancer$Age, Cancer$Survival)
 ```
 
-When using all the data given in the excel spreadsheet the scatter plot shows no correlation between the number of days surviving and the age of getting diagnosed with terminal cancer. This is because all the points on the scatter graph are random which do not follow any form of pattern resulting in a flat gradient for the best line of fit. This is further backed up when using the Pearson's product moment correlation (PMMC), with a coefficent $-0.07738$ (5dp). 
+When using all the data given in the excel spreadsheet the scatter plot shows no correlation between the number of days surviving and the age of getting diagnosed with terminal cancer. This is because all the points on the scatter graph are random which do not follow any form of pattern resulting in a flat gradient for the best line of fit. This is further backed up when using the Pearson's product moment correlation (PPMC), with a coefficent $-0.07738$ (5dp). 
 
-Since the PMMC is so close to 0 it proves that there is no correlation between the two variables, thus the data set does not follow any trend. The survival time will be less effected by the age of the patient, this is due to all the patients being terminally ill, thus the cancer cannot be cured or controlled with any treatment and will unfortunately lead to a premature death, but will be more effected by where the cancer is located.
+Since the PPMC is so close to 0 it proves that there is no correlation between the two variables, thus the data set does not follow any trend. The survival time will be less effected by the age of the patient, this is due to all the patients being terminally ill, thus the cancer cannot be cured or controlled with any treatment and will unfortunately lead to a premature death, but will be more effected by where the cancer is located.
 
 ### The effect of gender on the survival time
 
@@ -91,7 +91,7 @@ abline(mod1, col = "red")
 cor.test(Cancer_Stomach$Age, Cancer_Stomach$Survival)
 ```
 
-The scatter plot implies there is a weak negative correlation between the age of being diagnosed with terminal stomach cancer and survival time. The best-fit line has a mild negative slope, and the PMMC is $−0.25129$ (5dp). This suggests that older patients diagnosed with terminal stomach cancer tend to have shorter survival times, though the correlation is not particularly strong.
+The scatter plot implies there is a weak negative correlation between the age of being diagnosed with terminal stomach cancer and survival time. The best-fit line has a mild negative slope, and the PPMC is $−0.25129$ (5dp). This suggests that older patients diagnosed with terminal stomach cancer tend to have shorter survival times, though the correlation is not particularly strong.
 
 When comparing this result against the overall cancer dataset, there is a stronger correlation between stomach cancer then the general data set. This implies that age has a more noticeable impact on survival outcomes for patients with terminal stomach cancer, then with other types of cancer. This implies that older individuals diagnosed with terminal stomach cancer are more likely to experience faster disease progression and reduced survival time compared to patients with other types of terminal cancer at the same age.
 
@@ -115,7 +115,7 @@ abline(mod2, col = "blue")
 cor.test(Cancer_Bronchus$Age, Cancer_Bronchus$Survival)
 ```
 
-The scatter plot shows no correlation between age of getting diagnosed with terminal bronchus cancer and the survival time with a flat gradient for the best line of fit, aswell as having a PMMC $-0.07510$ (5dp). This PMMC is inline with the PMMC of the original model of just the age of getting diagnosed with terminal cancer and the survival time. 
+The scatter plot shows no correlation between age of getting diagnosed with terminal bronchus cancer and the survival time with a flat gradient for the best line of fit, aswell as having a PPMC $-0.07510$ (5dp). This PPMC is inline with the PPMC of the original model of just the age of getting diagnosed with terminal cancer and the survival time. 
 
 This could be due to bronchus cancer not having much data of patients between 40 and 65 years old causing a reduction in accuracy in the data. That being said, the graph shows no correlation, therefore the age of being diagnosed with terminal bronchus cancer does not have much or any effect on survival time. This could be due to the lungs being compromised leading to a quick death shown as all patients, excusing 2 outliers, passing away within $200$ days of the diagnoses.
 
@@ -132,9 +132,9 @@ abline(mod3, col = "red")
 cor.test(Cancer_Colon$Age, Cancer_Colon$Survival)
 ```
 
-The scatter plot which is comparing the age of getting diagnosed with terminal Colon cancer against the survival time. The plot once again shows no correlation between the two variables as shown with a shallow gradient for the best line of fit, which is further backed up with a PMMC $-0.12173$ (5dp). This suggests that older patients diagnosed with terminal colon cancer tend to have shorter survival times, though the correlation is so weak that this analysis is much less predictable.
+The scatter plot which is comparing the age of getting diagnosed with terminal Colon cancer against the survival time. The plot once again shows no correlation between the two variables as shown with a shallow gradient for the best line of fit, which is further backed up with a PPMC $-0.12173$ (5dp). This suggests that older patients diagnosed with terminal colon cancer tend to have shorter survival times, though the correlation is so weak that this analysis is much less predictable.
 
-When comparing this data to the overall cancer dataset, where the PMMC is $-0.07338$ (5dp), it is clear that the relationship between age of being diagnosed with terminal colon cancer and survival time has a similar relationship then the general diagnoses of terminal cancer. This implies that the age has a similar impact on survival outcomes for patients with terminal colon cancer, then with other types of cancer.
+When comparing this data to the overall cancer dataset, where the PPMC is $-0.07338$ (5dp), it is clear that the relationship between age of being diagnosed with terminal colon cancer and survival time has a similar relationship then the general diagnoses of terminal cancer. This implies that the age has a similar impact on survival outcomes for patients with terminal colon cancer, then with other types of cancer.
 
 ```{r,echo=FALSE, fig.align='center', include=TRUE}
 library(ggplot2)
@@ -149,7 +149,7 @@ abline(mod4, col = "blue")
 cor.test(Cancer_Breast$Age, Cancer_Breast$Survival)
 ```
 
-The scatter plot shows there is weak negative correlation between the age of getting diagnosed with terminal breast cancer and the survival time. Like stomach cancer, the line of best fit shows a steeper negative gradient then when compared with terminal cancer in general, implying that age has a more noticeable impact on survival outcomes for patients with terminal breast cancer, then with other types of cancer. This is further proven with a PMMC $-0.19200$, showing a stronger correlation when comparing with different types of cancer suchas Bronchus or Colon, aswell as the general terminal cancer dataset. This implies that older individuals diagnosed with terminal stomach cancer are more likely to experience faster disease progression and reduced survival time compared to patients with other types of terminal cancer at the same age.
+The scatter plot shows there is weak negative correlation between the age of getting diagnosed with terminal breast cancer and the survival time. Like stomach cancer, the line of best fit shows a steeper negative gradient then when compared with terminal cancer in general, implying that age has a more noticeable impact on survival outcomes for patients with terminal breast cancer, then with other types of cancer. This is further proven with a PPMC $-0.19200$, showing a stronger correlation when comparing with different types of cancer suchas Bronchus or Colon, aswell as the general terminal cancer dataset. This implies that older individuals diagnosed with terminal stomach cancer are more likely to experience faster disease progression and reduced survival time compared to patients with other types of terminal cancer at the same age.
 
 ```{r,echo=FALSE, fig.align='center', include=TRUE}
 library(ggplot2)
@@ -164,7 +164,7 @@ abline(mod5, col = "red")
 cor.test(Cancer_Kidney$Age, Cancer_Kidney$Survival)
 ```
 
-The relationship between the age of getting diagnosed with terminal Kidney cancer and survival time differs from all other types of cancer given in the spreadsheet. The graph shows positive correlation between the two variables, with a steeper best line of fit. Positive correlation indicates that as the age of the diagnoses for terminal kidney cancer increases survival time of the patient also increases. This again was further proven through its PMMC $0.42242$, showing the strongest correlation in the whole statistical report. This however could have been effected by the anomalous result of a 74 year old males surviving $1554$ days. The majority of the data shows survival time being $500$ days, regardless of age. Which again, without the anomalous result, would lead to a flat gradient for the best line of fit on the scatter plot and a much lower coefficient for the PMMC, hence a lower correlation between the two variables.
+The relationship between the age of getting diagnosed with terminal Kidney cancer and survival time differs from all other types of cancer given in the spreadsheet. The graph shows positive correlation between the two variables, with a steeper best line of fit. Positive correlation indicates that as the age of the diagnoses for terminal kidney cancer increases survival time of the patient also increases. This again was further proven through its PPMC $0.42242$, showing the strongest correlation in the whole statistical report. This however could have been effected by the anomalous result of a 74 year old males surviving $1554$ days. The majority of the data shows survival time being $500$ days, regardless of age. Which again, without the anomalous result, would lead to a flat gradient for the best line of fit on the scatter plot and a much lower coefficient for the PPMC, hence a lower correlation between the two variables.
 
 ```{r, echo = FALSE, fig.align = "center", results = 'hide'}
 Cancer_Kidney <- subset(Cancer, Type=="Kidney")
@@ -176,7 +176,7 @@ Although the 74 year old male survives for a significant longer duration then an
 
 In conclusion, there is a weak correlation between the age of diagnosis and survival time in terminal cancer patients. However, the type of cancer will influence the relationship of the two variables, with Stomach and Breast cancers showing the strongest negative correlations as proven above. This suggests that older patients with these types of cancer tend to have shorter survival times after diagnosis then patients with cancer types like Bronchus cancer or Colon cancer.
 
-The study's small sample size of just $100$ patients limits the accuracy of the findings in this statistical report, as outliers or anamolous resutls can heavily skew the final correlation results. This was proven in the case of terminal kidney cancer, a single longer survival time of an older patient resulted in a less reliable PMMC, causing a relatively strong positive correlation between the variables. When the outliers, which are all above the interquartile range, are excluded, the correlation becomes stronger, highlighting a clearer link between age and survival time then shown in the first graph of "The age of getting cancer versus the survival time"
+The study's small sample size of just $100$ patients limits the accuracy of the findings in this statistical report, as outliers or anamolous resutls can heavily skew the final correlation results. This was proven in the case of terminal kidney cancer, a single longer survival time of an older patient resulted in a less reliable PPMC, causing a relatively strong positive correlation between the variables. When the outliers, which are all above the interquartile range, are excluded, the correlation becomes stronger, highlighting a clearer link between age and survival time then shown in the first graph of "The age of getting cancer versus the survival time"
 
 Overall, the data suggests that as the age of diagnosis increases, survival time generally decreases. However, the type of cancer does play a critical role as not all cancers behave the same, and some may have a greater impact on survival than others.
 
